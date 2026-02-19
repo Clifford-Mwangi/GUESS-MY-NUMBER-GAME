@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Admin Dashboard</h1>
+    <p>🏦 House Bank: <span id="house-bank">0</span> KES</p>
+
+    <script>
+      // Password protection
+      const password = prompt("Enter admin password:");
+      if (password !== "phenomenon05") {
+        alert("Access denied!");
+        window.location = "index.html";
+      }
+
+      // Show house bank
+      const houseBankEl = document.getElementById("house-bank");
+      function updateHouseBank() {
+        houseBankEl.textContent = localStorage.getItem("houseBank") || 0;
+      }
+
+      // Update live every second
+      setInterval(updateHouseBank, 1000);
+    </script>
+  </body>
+</html>

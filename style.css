@@ -1,0 +1,183 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(135deg, #1a1a1a, #333, #444);
+  color: #fff;
+  font-family: "Press Start 2P", sans-serif;
+  text-align: center;
+  padding: 20px;
+  min-height: 100vh;
+  transition: background 0.5s ease;
+}
+
+header {
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 2.8rem;
+  margin-bottom: 5px;
+  color: #ffd700;
+}
+
+.instruction {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  opacity: 0.85;
+  color: #ccc;
+}
+
+.again {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #60b347;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition:
+    background 0.3s,
+    transform 0.2s;
+}
+
+.again:hover {
+  background-color: #4da73c;
+  transform: scale(1.05);
+}
+
+.game-container {
+  max-width: 500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* LOGIN */
+.login-section {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.username {
+  padding: 10px;
+  width: 70%;
+  max-width: 250px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 2px solid #fff;
+  font-size: 1rem;
+}
+
+.login {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #1e90ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition:
+    background 0.3s,
+    transform 0.2s;
+}
+
+.login:hover {
+  background-color: #1c7ad9;
+  transform: scale(1.05);
+}
+
+/* NUMBER DISPLAY */
+.number {
+  font-size: 4rem;
+  background: #fff;
+  color: #222;
+  width: 120px;
+  margin: 20px auto;
+  padding: 15px 0;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+/* LEFT INPUTS */
+.left input {
+  padding: 10px;
+  width: 100%;
+  max-width: 250px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 2px solid #fff;
+  font-size: 1rem;
+  background: #222;
+  color: #fff;
+}
+
+.left button {
+  padding: 10px 20px;
+  margin: 5px 0;
+  cursor: pointer;
+  background-color: #60b347;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition:
+    background 0.3s,
+    transform 0.2s;
+}
+
+.left button:hover {
+  background-color: #4da73c;
+  transform: scale(1.05);
+}
+
+/* RIGHT INFO PANEL */
+.right {
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
+.right p {
+  margin: 6px 0;
+  font-size: 1rem;
+}
+
+/* Wallet balance highlight */
+.wallet-balance {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+/* Remaining guesses */
+.remaining {
+  color: #ff6961;
+  font-weight: bold;
+}
+
+/* Mobile friendly */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2rem;
+  }
+  .number {
+    font-size: 3rem;
+    width: 90px;
+  }
+  .left input {
+    font-size: 0.9rem;
+  }
+  .left button,
+  .again,
+  .login {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+}
