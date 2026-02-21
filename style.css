@@ -11,235 +11,213 @@ body {
   color: #fff;
   font-family: "Press Start 2P", sans-serif;
   text-align: center;
-  padding: 20px;
+  padding: 20px 15px;
   min-height: 100vh;
   transition: background 0.5s ease;
-  overflow-x: hidden;
-  position: relative;
 }
 
-/* subtle floating stars effect */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(#fff 1px, transparent 1px);
-  background-size: 12px 12px;
-  animation: moveStars 80s linear infinite;
-  opacity: 0.03;
-  pointer-events: none;
-}
-
-@keyframes moveStars {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 1200px 1200px;
-  }
-}
-
+/* HEADER */
 header {
   margin-bottom: 25px;
 }
 
 h1 {
-  font-size: 2.8rem;
-  margin-bottom: 8px;
+  font-size: 2.2rem;
+  margin-bottom: 10px;
   color: #ffd700;
-  text-shadow:
-    0 0 5px #ffd70077,
-    0 0 10px #ffd70055;
+  line-height: 1.3;
 }
 
 .instruction {
-  margin-bottom: 12px;
-  font-size: 1.2rem;
+  margin-bottom: 15px;
+  font-size: 0.8rem;
   opacity: 0.85;
   color: #ccc;
-  text-shadow: 0 0 3px #000;
+}
+
+/* BUTTONS GENERAL IMPROVEMENT */
+button {
+  min-height: 48px; /* better for thumbs */
+  font-family: "Press Start 2P", sans-serif;
 }
 
 .again {
-  padding: 12px 25px;
+  padding: 12px 20px;
   cursor: pointer;
   background-color: #60b347;
   color: #fff;
   border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px #0005;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  transition:
+    background 0.3s,
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .again:hover {
   background-color: #4da73c;
-  transform: scale(1.08);
-  box-shadow: 0 6px 12px #0008;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
+/* GAME CONTAINER */
 .game-container {
-  max-width: 500px;
+  max-width: 420px;
   margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
 }
 
-/* LOGIN */
+/* LOGIN SECTION */
 .login-section {
   margin-bottom: 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  width: 100%;
 }
 
 .username {
   padding: 12px;
-  width: 75%;
-  max-width: 280px;
-  border-radius: 6px;
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 15px;
+  border-radius: 10px;
   border: 2px solid #fff;
-  font-size: 1rem;
+  font-size: 0.8rem;
   background: #222;
   color: #fff;
-  transition:
-    border 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.username:focus {
-  border-color: #60b347;
-  box-shadow: 0 0 8px #60b34755;
-  outline: none;
+  text-align: center;
 }
 
 .login {
-  padding: 12px 25px;
+  padding: 12px 20px;
   cursor: pointer;
   background-color: #1e90ff;
   color: #fff;
   border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px #0005;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  transition:
+    background 0.3s,
+    transform 0.2s,
+    box-shadow 0.2s;
+  width: 100%;
+  max-width: 320px;
 }
 
 .login:hover {
   background-color: #1c7ad9;
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px #0008;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
 /* NUMBER DISPLAY */
 .number {
-  font-size: 4rem;
+  font-size: 3.5rem;
   background: #fff;
   color: #222;
-  width: 130px;
-  margin: 20px auto;
+  width: 110px;
+  margin: 25px auto;
   padding: 18px 0;
   border-radius: 15px;
-  transition: all 0.4s ease;
-  box-shadow: 0 4px 15px #0005;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
 }
 
-/* LEFT INPUTS */
+/* LEFT SIDE */
+.left {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .left input {
   padding: 12px;
   width: 100%;
-  max-width: 280px;
-  margin-bottom: 10px;
-  border-radius: 6px;
+  max-width: 320px;
+  margin-bottom: 15px;
+  border-radius: 10px;
   border: 2px solid #fff;
-  font-size: 1rem;
+  font-size: 0.8rem;
   background: #222;
   color: #fff;
-  transition:
-    border 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.left input:focus {
-  border-color: #60b347;
-  box-shadow: 0 0 8px #60b34755;
-  outline: none;
+  text-align: center;
 }
 
 .left button {
-  padding: 12px 25px;
-  margin: 5px 0;
+  padding: 12px 20px;
+  margin: 8px 0;
   cursor: pointer;
   background-color: #60b347;
   color: #fff;
   border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px #0005;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  transition:
+    background 0.3s,
+    transform 0.2s,
+    box-shadow 0.2s;
+  width: 100%;
+  max-width: 320px;
 }
 
 .left button:hover {
   background-color: #4da73c;
-  transform: scale(1.07);
-  box-shadow: 0 6px 12px #0008;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
 /* RIGHT INFO PANEL */
 .right {
-  margin-top: 25px;
-  font-size: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  margin-top: 30px;
+  width: 100%;
+  max-width: 360px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(4px);
 }
 
+.right p {
+  margin: 12px 0;
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+/* Highlight Wallet */
 .wallet-balance {
   color: #ffd700;
   font-weight: bold;
-  text-shadow: 0 0 3px #000;
+  font-size: 0.8rem;
 }
 
+/* Remaining guesses */
 .remaining {
   color: #ff6961;
   font-weight: bold;
-  text-shadow: 0 0 3px #000;
+  font-size: 0.8rem;
 }
 
-/* Mobile friendly */
+/* Mobile Optimization */
 @media (max-width: 480px) {
+  body {
+    padding: 15px 10px;
+  }
+
   h1 {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
 
   .number {
     font-size: 3rem;
-    width: 100px;
-    padding: 15px 0;
+    width: 95px;
   }
 
-  .left input {
-    font-size: 0.95rem;
-  }
-
-  .left button,
-  .again,
-  .login {
-    width: 100%;
-    font-size: 0.95rem;
-  }
-
-  .game-container {
-    gap: 12px;
-  }
-
-  .login-section {
-    gap: 8px;
+  .right {
+    padding: 15px;
   }
 }
