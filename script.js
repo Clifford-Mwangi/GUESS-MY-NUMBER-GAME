@@ -1,72 +1,15 @@
 "use strict";
-
 /* =========================
    GAME CONFIG
 ========================= */
 
-const STAKE_PER_ROUND = 10;
-const HOUSE_EDGE_PERCENT = 20; // % of winnings that house takes automatically
-
-const FIRST_GUESS_WIN = 30;
-const SECOND_GUESS_WIN = 20;
-const THIRD_GUESS_WIN = 15;
-
-let secretNumber = Math.floor(Math.random() * 20) + 1;
-let score = 0;
-let highScore = 0;
-let remainingGuesses = 3;
-let guessNumber = 1; // tracks 1st, 2nd, 3rd attempt
-let streak = 1; // consecutive win multiplier
-
-/* =========================
-   WALLET & HOUSE
-========================= */
-
 let currentPlayer = null;
 let wallet = 0;
-let houseBank = Number(localStorage.getItem("houseBank")) || 0;
-
-function updateHouseBank(amount) {
-  houseBank += amount;
-  localStorage.setItem("houseBank", houseBank);
-}
-
-function saveWallet() {
-  if (currentPlayer) {
-    localStorage.setItem(`wallet_${currentPlayer}`, wallet);
-    document.querySelector(".wallet-balance").textContent = wallet;
-  }
-}
-
-function loadWallet(player) {
-  currentPlayer = player;
-  wallet = Number(localStorage.getItem(`wallet_${player}`)) || 100;
-  document.querySelector(".wallet-balance").textContent = wallet;
-}
-
-/* =========================
-   RESET GAME
-========================= */
-
-function resetGame() {
-  secretNumber = Math.floor(Math.random() * 20) + 1;
-  score = 0;
-  remainingGuesses = 3;
-  guessNumber = 1;
-
-  document.querySelector(".score").textContent = score;
-  document.querySelector(".remaining").textContent = remainingGuesses;
-  document.querySelector(".number").textContent = "?";
-  document.querySelector(".guess").value = "";
-  document.querySelector(".message").textContent = "Start guessing...";
-  document.querySelector("body").style.backgroundColor = "#222";
-  document.querySelector(".number").style.width = "15rem";
-  document.querySelector(".continue").style.display = "none";
-}
 
 /* =========================
    LOGIN
 ========================= */
+
 document.querySelector(".login").addEventListener("click", async function () {
   const username = document.querySelector(".username").value.trim();
 
@@ -75,121 +18,476 @@ document.querySelector(".login").addEventListener("click", async function () {
     return;
   }
 
-  const response = await fetch(
-    "https://guess-backend-uxyq.onrender.com/login",
-    {
+  try {
+    const response = await fetch("https://guess-backend-uxyq.onrender.com/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username }),
-    },
-  );
+    });
 
-  const data = await response.json();
+    const data = await response.json();
 
-  currentPlayer = username;
-  wallet = data.wallet;
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
 
-  document.querySelector(".wallet-balance").textContent = wallet;
+    currentPlayer = username;
+    wallet = data.wallet;
 
-  document.querySelector(".username").style.display = "none";
-  document.querySelector(".login").style.display = "none";
-  document.querySelector(".guess").style.display = "block";
-  document.querySelector(".check").style.display = "block";
+    document.querySelector(".wallet-balance").textContent = wallet;
 
-  document.querySelector(".message").textContent =
-    `Welcome ${username}, start guessing!`;
+    document.querySelector(".username").style.display = "none";
+    document.querySelector(".login").style.display = "none";
+    document.querySelector(".guess").style.display = "block";
+    document.querySelector(".check").style.display = "block";
+    document.querySelector(".deposit").style.display = "block";
+    document.querySelector(".withdraw").style.display = "block";
+
+    document.querySelector(".message").textContent =
+      `Welcome ${username}, start guessing!`;
+
+  } catch (err) {
+    alert("Server error. Try again.");
+  }
 });
 
 /* =========================
-   HELPER: APPLY HOUSE EDGE
+   CHECK GUESS
 ========================= */
 
-function applyHouseEdge(amount) {
-  const cut = Math.ceil(amount * (HOUSE_EDGE_PERCENT / 100));
-  updateHouseBank(cut);
-  return amount - cut;
-}
-
-/* =========================
-   CHECK BUTTON LOGIC
-========================= */
 document.querySelector(".check").addEventListener("click", async function () {
-  const guess = Number(document.querySelector(".guess").value);
-
   if (!currentPlayer) {
     alert("Login first!");
     return;
   }
 
-  const response = await fetch(
-    "https://guess-backend-uxyq.onrender.com/guess",
-    {
+  const guess = Number(document.querySelector(".guess").value);
+
+  if (!guess || guess < 1 || guess > 20) {
+    alert("Enter a number between 1 and 20");
+    return;
+  }
+
+  try {
+    const response = await fetch("https://guess-backend-uxyq.onrender.com/guess", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         username: currentPlayer,
         guess,
       }),
-    },
-  );
+    });
 
-  const data = await response.json();
+    const data = await response.json();
 
-  if (data.error) {
-    document.querySelector(".message").textContent = data.error;
-    return;
-  }
+    if (data.error) {
+      document.querySelector(".message").textContent = data.error;
+      return;
+    }
 
-  wallet = data.wallet;
-  document.querySelector(".wallet-balance").textContent = wallet;
-  if (data.remainingGuesses !== undefined) {
+    wallet = data.wallet;
+    document.querySelector(".wallet-balance").textContent = wallet;
     document.querySelector(".remaining").textContent = data.remainingGuesses;
-  }
-  if (data.result === "win") {
-    document.querySelector(".message").textContent =
-      `🎉 You won ${data.winnings} KES!`;
-    document.querySelector("body").style.background = "#60b347";
-  } else if (data.result === "lose") {
-    document.querySelector(".message").textContent =
-      `💀 You lost! Correct number was ${secretNumber}`;
-    document.querySelector("body").style.background = "red";
-    document.querySelector(".number").textContent = secretNumber;
-  } else if (data.result === "high") {
-    document.querySelector(".message").textContent = "Too HIGH!";
-  } else if (data.result === "low") {
-    document.querySelector(".message").textContent = "Too LOW!";
-  }
 
-  document.querySelector(".guess").value = "";
+    if (data.result === "win") {
+      document.querySelector(".message").textContent =
+        `🎉 You won ${data.winnings} KES!`;
+      document.querySelector("body").style.background = "#60b347";
+    } else if (data.result === "lose") {
+      document.querySelector(".message").textContent =
+        `💀 You lost! Correct number was ${data.correctNumber}`;
+      document.querySelector("body").style.background = "red";
+      document.querySelector(".number").textContent = data.correctNumber;
+    } else if (data.result === "high") {
+      document.querySelector(".message").textContent = "Too HIGH!";
+    } else if (data.result === "low") {
+      document.querySelector(".message").textContent = "Too LOW!";
+    }
+
+    document.querySelector(".guess").value = "";
+
+  } catch (err) {
+    alert("Server error.");
+  }
 });
 
 /* =========================
    AGAIN BUTTON
 ========================= */
 
-document.querySelector(".again").addEventListener("click", function () {
-  resetGame();
-  streak = 1;
+document.querySelector(".again").addEventListener("click", async function () {
+  if (!currentPlayer) return;
+
+  await fetch("https://guess-backend-uxyq.onrender.com/reset", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username: currentPlayer }),
+  });
+
+  document.querySelector(".message").textContent = "New round started!";
+  document.querySelector(".number").textContent = "?";
+  document.querySelector("body").style.background = "#222";
+  document.querySelector(".remaining").textContent = 3;
 });
 
 /* =========================
-   CONTINUE BUTTON
+   DEPOSIT
 ========================= */
 
-document.querySelector(".continue").addEventListener("click", function () {
-  remainingGuesses = 3;
-  guessNumber = 1;
-  secretNumber = Math.floor(Math.random() * 20) + 1;
+document.querySelector(".deposit").addEventListener("click", async function () {
+  const phone = prompt("Enter your phone number (2547xxxxxxx):");
+  const amount = Number(prompt("Enter amount to deposit:"));
 
-  document.querySelector(".remaining").textContent = remainingGuesses;
-  document.querySelector(".message").textContent =
-    "Continue playing with winnings!";
-  document.querySelector(".number").textContent = "?";
-  document.querySelector("body").style.backgroundColor = "#222";
-  document.querySelector(".number").style.width = "15rem";
-  document.querySelector(".continue").style.display = "none";
+  if (!phone || !amount || amount < 1) return alert("Invalid input");
+
+  try {
+    const response = await fetch("https://guess-backend-uxyq.onrender.com/deposit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: currentPlayer,
+        phone,
+        amount,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      alert(data.error);
+    } else {
+      alert("✅ STK Push sent. Complete payment on your phone.");
+    }
+  } catch (err) {
+    alert("Deposit failed.");
+  }
 });
+
+/* =========================
+   WITHDRAW
+========================= */
+
+document.querySelector(".withdraw").addEventListener("click", async function () {
+  const amount = Number(prompt("Enter amount to withdraw:"));
+
+  if (!amount || amount < 1) return alert("Invalid input");
+
+  try {
+    const response = await fetch("https://guess-backend-uxyq.onrender.com/withdraw", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: currentPlayer,
+        amount,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      alert(data.error);
+    } else {
+      wallet = data.wallet;
+      document.querySelector(".wallet-balance").textContent = wallet;
+      alert("✅ Withdrawal successful!");
+    }
+  } catch (err) {
+    alert("Withdrawal failed.");
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+// let currentPlayer = null;
+// let wallet = 0;
+
+// /* =========================
+//    LOGIN
+// ========================= */
+// document.querySelector(".login").addEventListener("click", async function () {
+//   const username = document.querySelector(".username").value.trim();
+//   if (!username) return alert("Enter a username!");
+
+//   try {
+//     const response = await fetch("https://guess-backend-uxyq.onrender.com/login", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ username }),
+//     });
+
+//     const data = await response.json();
+//     if (data.error) return alert(data.error);
+
+//     currentPlayer = username;
+//     wallet = data.wallet;
+//     document.querySelector(".wallet-balance").textContent = wallet;
+
+//     // Show game elements
+//     document.querySelector(".username").style.display = "none";
+//     document.querySelector(".login").style.display = "none";
+//     document.querySelector(".guess").style.display = "block";
+//     document.querySelector(".check").style.display = "block";
+//     document.querySelector(".deposit-amount").style.display = "block";
+//     document.querySelector(".deposit").style.display = "block";
+//     document.querySelector(".withdraw").style.display = "block";
+
+//     document.querySelector(".message").textContent =
+//       `Welcome ${username}, start guessing!`;
+//   } catch (err) {
+//     alert("Server error. Try again.");
+//   }
+// });
+
+// /* =========================
+//    CHECK GUESS
+// ========================= */
+// document.querySelector(".check").addEventListener("click", async function () {
+//   if (!currentPlayer) return alert("Login first!");
+
+//   const guess = Number(document.querySelector(".guess").value);
+//   if (!guess || guess < 1 || guess > 20) return alert("Enter a number between 1 and 20");
+
+//   try {
+//     const response = await fetch("https://guess-backend-uxyq.onrender.com/guess", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ username: currentPlayer, guess }),
+//     });
+
+//     const data = await response.json();
+//     if (data.error) {
+//       document.querySelector(".message").textContent = data.error;
+//       return;
+//     }
+
+//     wallet = data.wallet;
+//     document.querySelector(".wallet-balance").textContent = wallet;
+//     document.querySelector(".remaining").textContent = data.remainingGuesses;
+
+//     if (data.result === "win") {
+//       document.querySelector(".message").textContent =
+//         `🎉 You won ${data.winnings} KES!`;
+//       document.querySelector("body").style.background = "#60b347";
+//     } else if (data.result === "lose") {
+//       document.querySelector(".message").textContent =
+//         `💀 You lost! Correct number was ${data.correctNumber}`;
+//       document.querySelector("body").style.background = "red";
+//       document.querySelector(".number").textContent = data.correctNumber;
+//     } else if (data.result === "high") {
+//       document.querySelector(".message").textContent = "Too HIGH!";
+//     } else if (data.result === "low") {
+//       document.querySelector(".message").textContent = "Too LOW!";
+//     }
+
+//     document.querySelector(".guess").value = "";
+//   } catch (err) {
+//     alert("Server error.");
+//   }
+// });
+
+// /* =========================
+//    AGAIN BUTTON
+// ========================= */
+// document.querySelector(".again").addEventListener("click", async function () {
+//   if (!currentPlayer) return;
+//   await fetch("https://guess-backend-uxyq.onrender.com/reset", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ username: currentPlayer }),
+//   });
+
+//   document.querySelector(".message").textContent = "New round started!";
+//   document.querySelector(".number").textContent = "?";
+//   document.querySelector("body").style.background = "#222";
+//   document.querySelector(".remaining").textContent = 3;
+// });
+
+// /* =========================
+//    DEPOSIT
+// ========================= */
+// document.querySelector(".deposit").addEventListener("click", async function () {
+//   if (!currentPlayer) return alert("Login first!");
+//   const amount = Number(document.querySelector(".deposit-amount").value);
+//   if (!amount || amount < 10) return alert("Deposit at least 10 KES");
+
+//   try {
+//     const response = await fetch("https://guess-backend-uxyq.onrender.com/pay", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ username: currentPlayer, phone: prompt("Enter phone"), amount }),
+//     });
+//     const data = await response.json();
+//     if (data.error) return alert(data.error);
+//     alert("STK Push initiated. Complete payment on your phone.");
+//   } catch (err) {
+//     alert("Server error.");
+//   }
+// });
+
+// /* =========================
+//    WITHDRAW
+// ========================= */
+// document.querySelector(".withdraw").addEventListener("click", function () {
+//   if (!currentPlayer) return alert("Login first!");
+//   if (wallet < 50) return alert("Need at least 50 KES profit to withdraw");
+//   wallet -= 50;
+//   document.querySelector(".wallet-balance").textContent = wallet;
+//   fetch("https://guess-backend-uxyq.onrender.com/reset", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ username: currentPlayer, wallet }),
+//   });
+//   alert("50 KES withdrawn!");
+// });
+//
+//
+//
+//
+//
+//
+//
+/* =========================
+   GAME CONFIG
+========================= */
+
+// let currentPlayer = null;
+// let wallet = 0;
+
+// /* =========================
+//    LOGIN
+// ========================= */
+
+// document.querySelector(".login").addEventListener("click", async function () {
+//   const username = document.querySelector(".username").value.trim();
+
+//   if (!username) {
+//     alert("Enter a username!");
+//     return;
+//   }
+
+//   try {
+//     const response = await fetch("https://guess-backend-uxyq.onrender.com/login", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ username }),
+//     });
+
+//     const data = await response.json();
+
+//     if (data.error) {
+//       alert(data.error);
+//       return;
+//     }
+
+//     currentPlayer = username;
+//     wallet = data.wallet;
+
+//     document.querySelector(".wallet-balance").textContent = wallet;
+
+//     document.querySelector(".username").style.display = "none";
+//     document.querySelector(".login").style.display = "none";
+//     document.querySelector(".guess").style.display = "block";
+//     document.querySelector(".check").style.display = "block";
+
+//     document.querySelector(".message").textContent =
+//       `Welcome ${username}, start guessing!`;
+
+//   } catch (err) {
+//     alert("Server error. Try again.");
+//   }
+// });
+
+// /* =========================
+//    CHECK GUESS
+// ========================= */
+
+// document.querySelector(".check").addEventListener("click", async function () {
+//   if (!currentPlayer) {
+//     alert("Login first!");
+//     return;
+//   }
+
+//   const guess = Number(document.querySelector(".guess").value);
+
+//   if (!guess || guess < 1 || guess > 20) {
+//     alert("Enter a number between 1 and 20");
+//     return;
+//   }
+
+//   try {
+//     const response = await fetch("https://guess-backend-uxyq.onrender.com/guess", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         username: currentPlayer,
+//         guess,
+//       }),
+//     });
+
+//     const data = await response.json();
+
+//     if (data.error) {
+//       document.querySelector(".message").textContent = data.error;
+//       return;
+//     }
+
+//     wallet = data.wallet;
+//     document.querySelector(".wallet-balance").textContent = wallet;
+//     document.querySelector(".remaining").textContent = data.remainingGuesses;
+
+//     if (data.result === "win") {
+//       document.querySelector(".message").textContent =
+//         `🎉 You won ${data.winnings} KES!`;
+//       document.querySelector("body").style.background = "#60b347";
+//     }
+
+//     else if (data.result === "lose") {
+//       document.querySelector(".message").textContent =
+//         `💀 You lost! Correct number was ${data.correctNumber}`;
+//       document.querySelector("body").style.background = "red";
+//       document.querySelector(".number").textContent = data.correctNumber;
+//     }
+
+//     else if (data.result === "high") {
+//       document.querySelector(".message").textContent = "Too HIGH!";
+//     }
+
+//     else if (data.result === "low") {
+//       document.querySelector(".message").textContent = "Too LOW!";
+//     }
+
+//     document.querySelector(".guess").value = "";
+
+//   } catch (err) {
+//     alert("Server error.");
+//   }
+// });
+
+// /* =========================
+//    AGAIN BUTTON
+// ========================= */
+
+// document.querySelector(".again").addEventListener("click", async function () {
+//   if (!currentPlayer) return;
+
+//   await fetch("https://guess-backend-uxyq.onrender.com/reset", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ username: currentPlayer }),
+//   });
+
+//   document.querySelector(".message").textContent = "New round started!";
+//   document.querySelector(".number").textContent = "?";
+//   document.querySelector("body").style.background = "#222";
+//   document.querySelector(".remaining").textContent = 3;
+// }); 

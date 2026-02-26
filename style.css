@@ -221,3 +221,38 @@ button {
     padding: 15px;
   }
 }
+
+/* =========================
+   NEW GAME BUTTONS
+========================= */
+
+.left .deposit-amount,
+.left .deposit,
+.left .withdraw {
+  display: inline-block;
+  margin: 5px 5px 5px 0;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  border: 1px solid #333;
+  background-color: #f4f4f4;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.left .deposit-amount {
+  width: 120px;
+  border: 1px solid #999;
+}
+
+.left .deposit:hover,
+.left .withdraw:hover {
+  background-color: #ddd;
+  transform: translateY(-1px);
+}
+
+.left .deposit:active,
+.left .withdraw:active {
+  transform: translateY(0);
+  background-color: #ccc;
+} 

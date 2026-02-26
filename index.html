@@ -1,52 +1,62 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Guess My Number</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header>
-      <h1>🎯JAZA CHWANI !</h1>
-      <p class="instruction">(Guess a number between 1 and 20)</p>
-      <button class="again">🔄 Again</button>
-    </header>
-
-    <main class="game-container">
-      <!-- LOGIN SECTION -->
-      <div class="login-section">
-        <input type="text" class="username" placeholder="Enter username" />
-        <button class="login">Login</button>
-      </div>
-
-      <!-- NUMBER DISPLAY -->
-      <div class="number">?</div>
-
-      <!-- LEFT SIDE -->
-      <div class="left">
-        <input
-          type="number"
-          min="1"
-          max="20"
-          class="guess"
-          placeholder="Gues?"
-          style="display: none"
-        />
-        <button class="check" style="display: none">Check</button>
-        <button class="continue" style="display: none">Continue</button>
-      </div>
-
-      <!-- RIGHT SIDE -->
-      <div class="right">
-        <p class="message">Login to start playing...</p>
-        <p>💰 Wallet: KES <span class="wallet-balance">0</span></p>
-        <p>⭐ Score: <span class="score">0</span></p>
-        <p>🏆 Highscore: <span class="highscore">0</span></p>
-        <p>🎯 Remaining Guesses: <span class="remaining">3</span></p>
-      </div>
-    </main>
-
-    <script src="script.js"></script>
-  </body>
-</html>
+<!doctype html>  
+<html lang="en">  
+  <head>  
+    <meta charset="UTF-8" />  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+    <title>Guess My Number</title>  
+    <link rel="stylesheet" href="style.css" />  
+  </head>  
+  <body>  
+    <header>  
+      <h1>🎯JAZA CHWANI !</h1>  
+      <p class="instruction">(Guess a number between 1 and 20)</p>  
+      <button class="again">🔄 Again</button>  
+    </header>  
+  
+    <main class="game-container">  
+      <!-- LOGIN SECTION -->  
+      <div class="login-section">  
+        <input type="text" class="username" placeholder="Enter username" />  
+        <button class="login">Login</button>  
+      </div>  
+  
+      <!-- NUMBER DISPLAY -->  
+      <div class="number">?</div>  
+  
+      <!-- LEFT SIDE -->  
+      <div class="left">  
+        <input  
+          type="number"  
+          min="1"  
+          max="20"  
+          class="guess"  
+          placeholder="Gues?"  
+          style="display: none"  
+        />  
+        <button class="check" style="display: none">Check</button>  
+        <button class="continue" style="display: none">Continue</button>  
+        <input  
+          type="number"  
+          min="10"  
+          class="deposit-amount"  
+          placeholder="Deposit Amount"  
+          style="display: none"  
+        />  
+        <button class="deposit" style="display: none">Deposit</button>  
+        <button class="withdraw" style="display: none">Withdraw 50+</button>  
+      </div>  
+  
+      <!-- RIGHT SIDE -->  
+      <div class="right">  
+        <p class="message">Login to start playing...</p>  
+        <p>💰 Wallet: KES <span class="wallet-balance">0</span></p>  
+        <p>⭐ Score: <span class="score">0</span></p>  
+        <p>🏆 Highscore: <span class="highscore">0</span></p>  
+        <p>🎯 Remaining Guesses: <span class="remaining">3</span></p>  
+      </div>  
+    </main>  
+  
+    <script src="script.js"></script>  
+  </body>  
+</html> 
+ 
