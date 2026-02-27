@@ -19,11 +19,14 @@ document.querySelector(".login").addEventListener("click", async function () {
   }
 
   try {
-    const response = await fetch("https://guess-backend-uxyq.onrender.com/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username }),
-    });
+    const response = await fetch(
+      "https://guess-backend-uxyq.onrender.com/login",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username }),
+      },
+    );
 
     const data = await response.json();
 
@@ -46,7 +49,6 @@ document.querySelector(".login").addEventListener("click", async function () {
 
     document.querySelector(".message").textContent =
       `Welcome ${username}, start guessing!`;
-
   } catch (err) {
     alert("Server error. Try again.");
   }
@@ -70,14 +72,17 @@ document.querySelector(".check").addEventListener("click", async function () {
   }
 
   try {
-    const response = await fetch("https://guess-backend-uxyq.onrender.com/guess", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: currentPlayer,
-        guess,
-      }),
-    });
+    const response = await fetch(
+      "https://guess-backend-uxyq.onrender.com/guess",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: currentPlayer,
+          guess,
+        }),
+      },
+    );
 
     const data = await response.json();
 
@@ -106,7 +111,6 @@ document.querySelector(".check").addEventListener("click", async function () {
     }
 
     document.querySelector(".guess").value = "";
-
   } catch (err) {
     alert("Server error.");
   }
@@ -142,15 +146,18 @@ document.querySelector(".deposit").addEventListener("click", async function () {
   if (!phone || !amount || amount < 1) return alert("Invalid input");
 
   try {
-    const response = await fetch("https://guess-backend-uxyq.onrender.com/deposit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: currentPlayer,
-        phone,
-        amount,
-      }),
-    });
+    const response = await fetch(
+      "https://guess-backend-uxyq.onrender.com/pay",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: currentPlayer,
+          phone,
+          amount,
+        }),
+      },
+    );
 
     const data = await response.json();
 
@@ -168,45 +175,39 @@ document.querySelector(".deposit").addEventListener("click", async function () {
    WITHDRAW
 ========================= */
 
-document.querySelector(".withdraw").addEventListener("click", async function () {
-  const amount = Number(prompt("Enter amount to withdraw:"));
+document
+  .querySelector(".withdraw")
+  .addEventListener("click", async function () {
+    const amount = Number(prompt("Enter amount to withdraw:"));
 
-  if (!amount || amount < 1) return alert("Invalid input");
+    if (!amount || amount < 1) return alert("Invalid input");
 
-  try {
-    const response = await fetch("https://guess-backend-uxyq.onrender.com/withdraw", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: currentPlayer,
-        amount,
-      }),
-    });
+    try {
+      const response = await fetch(
+        "https://guess-backend-uxyq.onrender.com/withdraw",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: currentPlayer,
+            amount,
+          }),
+        },
+      );
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (data.error) {
-      alert(data.error);
-    } else {
-      wallet = data.wallet;
-      document.querySelector(".wallet-balance").textContent = wallet;
-      alert("✅ Withdrawal successful!");
+      if (data.error) {
+        alert(data.error);
+      } else {
+        wallet = data.wallet;
+        document.querySelector(".wallet-balance").textContent = wallet;
+        alert("✅ Withdrawal successful!");
+      }
+    } catch (err) {
+      alert("Withdrawal failed.");
     }
-  } catch (err) {
-    alert("Withdrawal failed.");
-  }
-});
-
-
-
-
-
-
-
-
-
-
-
+  });
 
 // let currentPlayer = null;
 // let wallet = 0;
@@ -490,4 +491,4 @@ document.querySelector(".withdraw").addEventListener("click", async function () 
 //   document.querySelector(".number").textContent = "?";
 //   document.querySelector("body").style.background = "#222";
 //   document.querySelector(".remaining").textContent = 3;
-// }); 
+// });
