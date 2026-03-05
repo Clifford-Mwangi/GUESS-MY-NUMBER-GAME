@@ -237,7 +237,11 @@ button {
   border: 1px solid #333;
   background-color: #f4f4f4;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+  color: #222;
+  font-weight: bold;
 }
 
 .left .deposit-amount {
@@ -255,4 +259,4 @@ button {
 .left .withdraw:active {
   transform: translateY(0);
   background-color: #ccc;
-} 
+}
