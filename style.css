@@ -240,7 +240,7 @@ button {
   transition:
     background-color 0.2s,
     transform 0.1s;
-  color: #222;
+  color: #000 !important;
   font-weight: bold;
 }
 
